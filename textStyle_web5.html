@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Text Formatter & PDF Exporter</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 1rem; }
+    textarea { width: 100%; height: 150px; }
+    .controls, .preview, .output { margin-top: 1rem; }
+    .preview { border: 1px solid #ccc; padding: 1rem; min-height: 300px; background: #fafafa; }
+    label { display: inline-block; width: 100px; }
+    .control-group { margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+
+  <h1>Text Upload, Style & PDF Export</h1>
+
+  <input type="file" id="fileInput" accept=".txt" />
+  <textarea id="textInput" placeholder="Or paste text with <title>, <intro>, etc. here..."></textarea>
+
+  <div class="controls">
+    <div class="control-group"><label>Font Size:</label><input type="number" id="fontSize" value="14" /> px</div>
+    <div class="control-group"><label>Font Family:</label>
+      <select id="fontFamily">
+        <option value="Arial">Arial</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Courier New">Courier</option>
+        <option value="Times New Roman">Times</option>
+      </select>
+    </div>
+    <div class="control-group"><label>Line Height:</label><input type="number" id="lineHeight" value="1.5" step="0.1" /></div>
+    <div class="control-group"><label>Justify:</label><input type="checkbox" id="justifyText" /></div>
+    <div class="control-group"><label>Margin:</label><input type="number" id="margin" value="40" /> px</div>
+    <div class="control-group"><label>Alignment:</label>
+      <select id="alignment">
+        <option value="left">Left</option>
+        <option value="center">Center</option>
+        <option value="right">Right</option>
+      </select>
+    </div>
+    <button onclick="updatePreview()">Update Preview</button>
+    <button onclick="downloadPDF()">Download PDF</button>
+  </div>
+
+  <div class="preview" id="preview"></div>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const textInput = document.getElementById("textInput");
+
+    fileInput.addEventListener("change", function () {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        textInput.value = e.target.result;
+        updatePreview();
+      };
+      reader.readAsText(this.files[0]);
+    });
+
+    function parseCustomTags(text) {
+      const tags = ["title", "intro", "bodytext", "caption", "footnote"];
+      const content = {};
+      tags.forEach(tag => {
+        const regex = new RegExp(`<${tag}>([\\s\\S]*?)<\/${tag}>`, "i");
+        const match = text.match(regex);
+        content[tag] = match ? match[1].trim() : "";
+      });
+      return content;
+    }
+
+    function updatePreview() {
+      const content = parseCustomTags(textInput.value);
+
+      const fontSize = document.getElementById("fontSize").value + "px";
+      const fontFamily = document.getElementById("fontFamily").value;
+      const lineHeight = document.getElementById("lineHeight").value;
+      const textAlign = document.getElementById("alignment").value;
+      const justify = document.getElementById("justifyText").checked ? "justify" : textAlign;
+      const margin = document.getElementById("margin").value + "px";
+
+      const preview = document.getElementById("preview");
+      preview.innerHTML = `
+        <h1>${content.title}</h1>
+        <p><strong>${content.intro}</strong></p>
+        <p>${content.bodytext}</p>
+        <p style="font-style: italic;">${content.caption}</p>
+        <p style="font-size: 0.8em; color: gray;">${content.footnote}</p>
+      `;
+      preview.style.fontSize = fontSize;
+      preview.style.fontFamily = fontFamily;
+      preview.style.lineHeight = lineHeight;
+      preview.style.textAlign = justify;
+      preview.style.padding = margin;
+    }
+
+    async function downloadPDF() {
+      const content = parseCustomTags(textInput.value);
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({
+        unit: "pt",
+        format: "a4",
+      });
+
+      const fontSize = parseInt(document.getElementById("fontSize").value);
+      const lineHeight = parseFloat(document.getElementById("lineHeight").value);
+      const margin = parseInt(document.getElementById("margin").value);
+      const align = document.getElementById("alignment").value;
+
+      let cursorY = margin;
+
+      const lineOptions = { maxWidth: 595 - 2 * margin, align };
+
+      doc.setFontSize(fontSize);
+      doc.setFont("Helvetica", "bold");
+      doc.text(content.title, margin, cursorY, lineOptions);
+      cursorY += fontSize * lineHeight;
+
+      doc.setFont("Helvetica", "normal");
+      doc.text(content.intro, margin, cursorY, lineOptions);
+      cursorY += fontSize * lineHeight;
+
+      doc.text(content.bodytext, margin, cursorY, lineOptions);
+      cursorY += fontSize * lineHeight * 3;
+
+      doc.setFont("Helvetica", "italic");
+      doc.text(content.caption, margin, cursorY, lineOptions);
+      cursorY += fontSize * lineHeight;
+
+      doc.setFontSize(fontSize * 0.8);
+      doc.setTextColor(100);
+      doc.text(content.footnote, margin, cursorY, lineOptions);
+
+      doc.save("formatted-text.pdf");
+    }
+
+    updatePreview();
+  </script>
+</body>
+</html>

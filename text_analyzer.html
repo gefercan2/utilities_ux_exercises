@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Analysis Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .upload-section {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .file-input {
+            margin: 10px 0;
+        }
+        .analyze-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .analyze-btn:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .section h3 {
+            color: #333;
+            margin-top: 0;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .word-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .word-item:last-child {
+            border-bottom: none;
+        }
+        .word {
+            font-weight: bold;
+            color: #333;
+        }
+        .count {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .positions {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .neighbor-pair {
+            background-color: #e7f3ff;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+            border-left: 3px solid #007bff;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Text Analysis Tool</h1>
+        
+        <!-- File Upload Section -->
+        <div class="upload-section">
+            <h3>Upload a Text File</h3>
+            <input type="file" id="fileInput" accept=".txt" class="file-input">
+            <p>Or paste your text below:</p>
+            <textarea id="textArea" placeholder="Paste your text here..."></textarea>
+            <br>
+            <button onclick="analyzeText()" class="analyze-btn">🔍 Analyze Text</button>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="results">
+            <!-- Word Frequency Section -->
+            <div class="section">
+                <h3>📈 Most Used Words</h3>
+                <div id="wordFrequency"></div>
+            </div>
+
+            <!-- Word Positions Section -->
+            <div class="section">
+                <h3>📍 Word Positions</h3>
+                <div id="wordPositions"></div>
+            </div>
+
+            <!-- Word Neighbors Section -->
+            <div class="section">
+                <h3>🤝 Most Common Word Pairs (Neighbors)</h3>
+                <div id="wordNeighbors"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables to store analysis results
+        let textContent = '';
+        let words = [];
+        let wordFrequency = {};
+        let wordPositions = {};
+        let wordNeighbors = {};
+
+        // Step 1: Handle file upload and text input
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            
+            // Check if a file was selected
+            if (file) {
+                // Create a FileReader to read the file content
+                const reader = new FileReader();
+                
+                // Define what happens when the file is successfully read
+                reader.onload = function(e) {
+                    // Store the file content and display it in the textarea
+                    textContent = e.target.result;
+                    document.getElementById('textArea').value = textContent;
+                };
+                
+                // Read the file as text
+                reader.readAsText(file);
+            }
+        });
+
+        // Step 2: Main analysis function
+        function analyzeText() {
+            // Get text from textarea (either uploaded file or manually entered)
+            const inputText = document.getElementById('textArea').value;
+            
+            // Check if there's any text to analyze
+            if (!inputText.trim()) {
+                alert('Please upload a file or enter some text to analyze!');
+                return;
+            }
+
+            // Store the text content for analysis
+            textContent = inputText;
+
+            // Step 3: Clean and prepare the text for analysis
+            prepareText();
+
+            // Step 4: Calculate word frequency
+            calculateWordFrequency();
+
+            // Step 5: Find word positions in the text
+            findWordPositions();
+
+            // Step 6: Analyze word neighbors (adjacent words)
+            analyzeWordNeighbors();
+
+            // Step 7: Display all results
+            displayResults();
+        }
+
+        // Step 3: Clean and prepare text for analysis
+        function prepareText() {
+            // Convert to lowercase for case-insensitive analysis
+            const cleanText = textContent.toLowerCase();
+            
+            // Remove punctuation and split into words
+            // This regex keeps only letters, numbers, and spaces
+            const cleanedText = cleanText.replace(/[^\w\s]/g, ' ');
+            
+            // Split into words and filter out empty strings
+            words = cleanedText.split(/\s+/).filter(word => word.length > 0);
+            
+            console.log(`Processed ${words.length} words for analysis`);
+        }
+
+        // Step 4: Calculate how many times each word appears
+        function calculateWordFrequency() {
+            // Reset the frequency counter
+            wordFrequency = {};
+            
+            // Count each word occurrence
+            words.forEach(word => {
+                // If word exists in our counter, increment it; otherwise, start at 1
+                wordFrequency[word] = (wordFrequency[word] || 0) + 1;
+            });
+            
+            console.log('Word frequency calculated:', Object.keys(wordFrequency).length, 'unique words');
+        }
+
+        // Step 5: Find where each word appears in the text
+        function findWordPositions() {
+            // Reset positions tracker
+            wordPositions = {};
+            
+            // Go through each word and record its position
+            words.forEach((word, index) => {
+                // If this is the first time we see this word, create an array for it
+                if (!wordPositions[word]) {
+                    wordPositions[word] = [];
+                }
+                
+                // Add the current position (index + 1 for human-readable numbering)
+                wordPositions[word].push(index + 1);
+            });
+            
+            console.log('Word positions mapped for', Object.keys(wordPositions).length, 'unique words');
+        }
+
+        // Step 6: Analyze word neighbors (which words appear together)
+        function analyzeWordNeighbors() {
+            // Reset neighbors tracker
+            wordNeighbors = {};
+            
+            // Look at each word and its next neighbor
+            for (let i = 0; i < words.length - 1; i++) {
+                const currentWord = words[i];
+                const nextWord = words[i + 1];
+                
+                // Create a pair identifier (current word + next word)
+                const pair = `${currentWord} ${nextWord}`;
+                
+                // Count how many times this pair appears
+                wordNeighbors[pair] = (wordNeighbors[pair] || 0) + 1;
+            }
+            
+            console.log('Word neighbors analyzed:', Object.keys(wordNeighbors).length, 'unique pairs');
+        }
+
+        // Step 7: Display all results in the HTML
+        function displayResults() {
+            // Show the results section
+            document.getElementById('results').style.display = 'block';
+            
+            // Display word frequency (most common words first)
+            displayWordFrequency();
+            
+            // Display word positions
+            displayWordPositions();
+            
+            // Display word neighbors (most common pairs first)
+            displayWordNeighbors();
+            
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Display word frequency results
+        function displayWordFrequency() {
+            const container = document.getElementById('wordFrequency');
+            
+            // Sort words by frequency (highest first)
+            const sortedWords = Object.entries(wordFrequency)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 20); // Show top 20 words
+            
+            // Create HTML for each word
+            let html = '';
+            sortedWords.forEach(([word, count]) => {
+                html += `
+                    <div class="word-item">
+                        <span class="word">"${word}"</span>
+                        <span class="count">${count} times</span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Display word positions results
+        function displayWordPositions() {
+            const container = document.getElementById('wordPositions');
+            
+            // Sort words by frequency and show top 10 with their positions
+            const sortedWords = Object.entries(wordFrequency)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+            
+            let html = '';
+            sortedWords.forEach(([word, count]) => {
+                const positions = wordPositions[word];
+                const positionText = positions.length > 10 
+                    ? `${positions.slice(0, 10).join(', ')}... (+${positions.length - 10} more)`
+                    : positions.join(', ');
+                
+                html += `
+                    <div class="word-item">
+                        <div>
+                            <span class="word">"${word}"</span>
+                            <span class="count">(${count} times)</span>
+                            <div class="positions">Positions: ${positionText}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Display word neighbors results
+        function displayWordNeighbors() {
+            const container = document.getElementById('wordNeighbors');
+            
+            // Sort pairs by frequency (highest first)
+            const sortedPairs = Object.entries(wordNeighbors)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 15); // Show top 15 pairs
+            
+            let html = '';
+            sortedPairs.forEach(([pair, count]) => {
+                html += `
+                    <div class="neighbor-pair">
+                        <strong>"${pair}"</strong> appears together <span class="count">${count} times</span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
