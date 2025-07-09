@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text File Line Break Cleaner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .upload-section, .process-section, .download-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .upload-section {
+            background-color: #f9f9f9;
+        }
+        
+        .process-section {
+            background-color: #e8f4f8;
+        }
+        
+        .download-section {
+            background-color: #e8f8e8;
+        }
+        
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .download-btn {
+            background-color: #28a745;
+        }
+        
+        .download-btn:hover {
+            background-color: #218838;
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text File Line Break Cleaner</h1>
+        
+        <!-- File Upload Section -->
+        <div class="upload-section">
+            <h3>Step 1: Upload Text File</h3>
+            <input type="file" id="fileInput" accept=".txt" />
+            <div id="fileStatus" class="status" style="display: none;"></div>
+        </div>
+        
+        <!-- Process Section -->
+        <div class="process-section">
+            <h3>Step 2: Process File</h3>
+            <button id="processBtn" disabled onclick="processFile()">Clean Line Breaks</button>
+            <div id="processStatus" class="status" style="display: none;"></div>
+        </div>
+        
+        <!-- Download Section -->
+        <div class="download-section">
+            <h3>Step 3: Download Cleaned File</h3>
+            <button id="downloadBtn" class="download-btn" disabled onclick="downloadFile()">Download Cleaned File</button>
+            <div id="downloadStatus" class="status" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables to store file data
+        let originalFileName = '';
+        let cleanedText = '';
+        
+        // Get references to DOM elements
+        const fileInput = document.getElementById('fileInput');
+        const processBtn = document.getElementById('processBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const fileStatus = document.getElementById('fileStatus');
+        const processStatus = document.getElementById('processStatus');
+        const downloadStatus = document.getElementById('downloadStatus');
+        
+        // Event listener for file input change
+        fileInput.addEventListener('change', handleFileSelect);
+        
+        /**
+         * Handle file selection and validation
+         */
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            
+            // Reset previous states
+            processBtn.disabled = true;
+            downloadBtn.disabled = true;
+            hideAllStatus();
+            
+            if (!file) {
+                return;
+            }
+            
+            // Validate file type
+            if (!file.name.toLowerCase().endsWith('.txt')) {
+                showStatus(fileStatus, 'Please select a .txt file only.', 'error');
+                return;
+            }
+            
+            // Store original filename for download
+            originalFileName = file.name;
+            
+            // Read file content
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                
+                // Validate file content
+                if (!content || content.trim() === '') {
+                    showStatus(fileStatus, 'The selected file is empty.', 'error');
+                    return;
+                }
+                
+                // Store original content and enable processing
+                originalText = content;
+                processBtn.disabled = false;
+                showStatus(fileStatus, `File "${file.name}" loaded successfully (${content.length} characters)`, 'success');
+            };
+            
+            reader.onerror = function() {
+                showStatus(fileStatus, 'Error reading file. Please try again.', 'error');
+            };
+            
+            // Read file as text
+            reader.readAsText(file);
+        }
+        
+        /**
+         * Main function to process and clean the text
+         */
+        function processFile() {
+            if (!originalText) {
+                showStatus(processStatus, 'No file content to process.', 'error');
+                return;
+            }
+            
+            showStatus(processStatus, 'Processing file...', 'info');
+            
+            try {
+                // Clean the text according to specifications
+                cleanedText = cleanLineBreaks(originalText);
+                
+                // Enable download button
+                downloadBtn.disabled = false;
+                showStatus(processStatus, 'File processed successfully!', 'success');
+                showStatus(downloadStatus, 'Ready to download cleaned file.', 'info');
+                
+            } catch (error) {
+                showStatus(processStatus, 'Error processing file: ' + error.message, 'error');
+            }
+        }
+        
+        /**
+         * Clean line breaks from text according to specified rules
+         * @param {string} text - Original text content
+         * @returns {string} - Cleaned text
+         */
+        function cleanLineBreaks(text) {
+            // Split text into lines for processing
+            const lines = text.split(/\r?\n/);
+            let result = '';
+            
+            for (let i = 0; i < lines.length; i++) {
+                const currentLine = lines[i].trim();
+                
+                // Skip empty lines
+                if (currentLine === '') {
+                    continue;
+                }
+                
+                // Add the current line to result
+                result += currentLine;
+                
+                // Determine if we should add a line break or space after this line
+                if (i < lines.length - 1) { // Not the last line
+                    const nextLine = lines[i + 1] ? lines[i + 1].trim() : '';
+                    
+                    // Check if current line ends with a period
+                    if (currentLine.endsWith('.')) {
+                        result += '\n';
+                    }
+                    // Check if next line starts with uppercase text (likely a heading or important text)
+                    else if (nextLine && isUpperCaseText(nextLine)) {
+                        result += '\n';
+                    }
+                    // Check if current line is uppercase text (likely a heading)
+                    else if (isUpperCaseText(currentLine)) {
+                        result += '\n';
+                    }
+                    // Otherwise, replace line break with space
+                    else if (nextLine !== '') {
+                        result += ' ';
+                    }
+                }
+            }
+            
+            // Clean up multiple consecutive spaces and line breaks
+            result = result.replace(/ +/g, ' '); // Replace multiple spaces with single space
+            result = result.replace(/\n +/g, '\n'); // Remove spaces after line breaks
+            result = result.replace(/ +\n/g, '\n'); // Remove spaces before line breaks
+            result = result.replace(/\n{3,}/g, '\n\n'); // Limit consecutive line breaks to maximum 2
+            
+            return result.trim();
+        }
+        
+        /**
+         * Check if a line consists mainly of uppercase text
+         * @param {string} line - Text line to check
+         * @returns {boolean} - True if line is predominantly uppercase
+         */
+        function isUpperCaseText(line) {
+            // Remove common punctuation and numbers for analysis
+            const textOnly = line.replace(/[^\w\s]/g, '').replace(/\d/g, '');
+            
+            // If line is too short or has no letters, don't treat as uppercase heading
+            if (textOnly.length < 3) {
+                return false;
+            }
+            
+            // Count uppercase vs lowercase letters
+            const uppercaseCount = (textOnly.match(/[A-Z]/g) || []).length;
+            const lowercaseCount = (textOnly.match(/[a-z]/g) || []).length;
+            
+            // Consider it uppercase text if:
+            // 1. More than 70% of letters are uppercase, OR
+            // 2. All letters are uppercase and line is reasonably short (likely a heading)
+            return (uppercaseCount > lowercaseCount * 2.3) || 
+                   (lowercaseCount === 0 && uppercaseCount > 0 && line.length < 100);
+        }
+        
+        /**
+         * Download the cleaned text as a new file
+         */
+        function downloadFile() {
+            if (!cleanedText) {
+                showStatus(downloadStatus, 'No processed content to download.', 'error');
+                return;
+            }
+            
+            try {
+                // Create a blob with the cleaned text
+                const blob = new Blob([cleanedText], { type: 'text/plain' });
+                
+                // Create download link
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                
+                // Generate filename (add "_cleaned" before file extension)
+                const nameWithoutExt = originalFileName.replace(/\.[^/.]+$/, '');
+                const extension = originalFileName.split('.').pop();
+                a.download = `${nameWithoutExt}_cleaned.${extension}`;
+                
+                // Trigger download
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                // Clean up URL object
+                URL.revokeObjectURL(url);
+                
+                showStatus(downloadStatus, 'File downloaded successfully!', 'success');
+                
+            } catch (error) {
+                showStatus(downloadStatus, 'Error downloading file: ' + error.message, 'error');
+            }
+        }
+        
+        /**
+         * Show status message in specified element
+         * @param {Element} element - DOM element to show status in
+         * @param {string} message - Status message
+         * @param {string} type - Status type ('success', 'error', 'info')
+         */
+        function showStatus(element, message, type) {
+            element.textContent = message;
+            element.className = `status ${type}`;
+            element.style.display = 'block';
+        }
+        
+        /**
+         * Hide all status messages
+         */
+        function hideAllStatus() {
+            fileStatus.style.display = 'none';
+            processStatus.style.display = 'none';
+            downloadStatus.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
