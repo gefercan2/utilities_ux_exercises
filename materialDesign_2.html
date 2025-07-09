@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Design & UI Templates</title>
+
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Tailwind Configuration */
+        :root {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Ensure MDL styles are applied correctly with Tailwind */
+        .mdl-layout__header-row,
+        .mdl-card {
+            border-radius: 0.5rem; /* Apply rounded corners to MDL components */
+        }
+        .mdl-button {
+            border-radius: 9999px; /* Fully rounded buttons */
+        }
+        .mdl-textfield__input {
+            border-radius: 0.375rem; /* Slightly rounded text fields */
+        }
+
+        /* Styling for code blocks */
+        .code-block {
+            background-color: #1f2937; /* Gray-800 */
+            color: #f9fafb; /* Gray-50 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 0.875rem; /* text-sm */
+        }
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap; /* Ensures long lines wrap */
+            word-break: break-all; /* Breaks words if necessary */
+        }
+
+        /* Custom styles for the slider */
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .slider-wrapper img {
+            min-width: 100%; /* Each image takes full width of the container */
+            display: block;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            z-index: 10;
+            user-select: none;
+            transition: background-color 0.3s ease;
+        }
+        .slider-button:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .slider-button.left { left: 1rem; }
+        .slider-button.right { right: 1rem; }
+
+        /* Custom styles for accordion */
+        .accordion-item {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .accordion-header {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #374151;
+            transition: background-color 0.3s ease;
+        }
+        .accordion-header:hover {
+            background-color: #f3f4f6;
+        }
+        .accordion-content {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        .accordion-content p {
+            padding-bottom: 1rem;
+        }
+        .accordion-item.active .accordion-content {
+            max-height: 200px; /* Adjust as needed for content length */
+            padding-top: 0.5rem;
+            padding-bottom: 1rem;
+        }
+        .accordion-item.active .accordion-header {
+            background-color: #e5e7eb;
+        }
+
+        /* Custom styles for sliding cards (horizontal scroll) */
+        .sliding-cards-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 1rem; /* Space for scrollbar */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: none; /* Firefox */
+        }
+        .sliding-cards-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        .sliding-cards-container .mdl-card {
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 1rem;
+            min-width: 280px; /* Minimum width for cards */
+            max-width: 320px; /* Max width for cards */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Styling for the tab content to ensure it's visible in a column */
+        .mdl-layout__tab-panel {
+            min-height: 150px; /* Ensure some height for content */
+        }
+    </style>
+
+    <!-- Material Design Lite CSS -->
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <!-- Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body class="bg-gray-100 text-gray-800 p-4 sm:p-6 md:p-8">
+
+    <!-- Main Container -->
+    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-6 sm:p-8 md:p-10">
+
+        <h1 class="text-3xl sm:text-4xl font-bold text-center mb-8 text-indigo-700">
+            Material Design & UI Templates
+        </h1>
+
+        <!-- Section: Ready-to-Copy Material Design Elements -->
+        <section class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 text-indigo-600 border-b pb-3">
+                Ready-to-Copy Material Design Elements
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Buttons Category -->
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col">
+                    <h3 class="text-xl font-medium mb-4">Buttons</h3>
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Preview:</p>
+                        <div class="flex flex-wrap items-center gap-4 p-2 bg-white rounded-md shadow-inner">
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                                Raised Button
+                            </button>
+                            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                                <i class="material-icons">add</i>
+                            </button>
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+                                Colored Button
+                            </button>
+                            <button class="mdl-button mdl-js-button mdl-button--icon">
+                                <i class="material-icons">mood</i>
+                            </button>
+                            <button class="mdl-button mdl-js-button mdl-button--flat mdl-js-ripple-effect">
+                                Flat Button
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Code:</p>
+                        <div class="code-block">
+<pre><code>&lt;!-- Raised Button --&gt;
+&lt;button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"&gt;
+    Raised Button
+&lt;/button&gt;
+
+&lt;!-- FAB (Floating Action Button) --&gt;
+&lt;button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"&gt;
+    &lt;i class="material-icons"&gt;add&lt;/i&gt;
+&lt;/button&gt;
+
+&lt;!-- Colored Raised Button --&gt;
+&lt;button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"&gt;
+    Colored Button
+&lt;/button&gt;
+
+&lt;!-- Icon Button --&gt;
+&lt;button class="mdl-button mdl-js-button mdl-button--icon"&gt;
+    &lt;i class="material-icons"&gt;mood&lt;/i&gt;
+&lt;/button&gt;
+
+&lt;!-- Flat Button --&gt;
+&lt;button class="mdl-button mdl-js-button mdl-button--flat mdl-js-ripple-effect"&gt;
+    Flat Button
+&lt;/button&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Fields Category -->
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col">
+                    <h3 class="text-xl font-medium mb-4">Text Fields</h3>
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Preview:</p>
+                        <div class="p-2 bg-white rounded-md shadow-inner">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mb-4 w-full">
+                                <input class="mdl-textfield__input" type="text" id="sample1">
+                                <label class="mdl-textfield__label" for="sample1">Text input...</label>
+                            </div>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label w-full">
+                                <input class="mdl-textfield__input" type="password" id="sample2">
+                                <label class="mdl-textfield__label" for="sample2">Password...</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Code:</p>
+                        <div class="code-block">
+<pre><code>&lt;!-- Text Input with Floating Label --&gt;
+&lt;div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label w-full"&gt;
+    &lt;input class="mdl-textfield__input" type="text" id="my-text-input"&gt;
+    &lt;label class="mdl-textfield__label" for="my-text-input"&gt;Enter text here...&lt;/label&gt;
+&lt;/div&gt;
+
+&lt;!-- Password Input with Floating Label --&gt;
+&lt;div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label w-full"&gt;
+    &lt;input class="mdl-textfield__input" type="password" id="my-password-input"&gt;
+    &lt;label class="mdl-textfield__label" for="my-password-input"&gt;Enter password...&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cards Category -->
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col lg:col-span-1">
+                    <h3 class="text-xl font-medium mb-4">Cards</h3>
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Preview:</p>
+                        <div class="flex flex-wrap justify-center gap-4 p-2 bg-white rounded-md shadow-inner">
+                            <!-- Simple Card -->
+                            <div class="mdl-card mdl-shadow--2dp w-full max-w-sm">
+                                <div class="mdl-card__title">
+                                    <h2 class="mdl-card__title-text">Welcome</h2>
+                                </div>
+                                <div class="mdl-card__supporting-text">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                    Mauris sagittis pellentesque lacus eleifend lacinia...
+                                </div>
+                                <div class="mdl-card__actions mdl-card--border">
+                                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                                        Get Started
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Code:</p>
+                        <div class="code-block">
+<pre><code>&lt;!-- Simple Material Design Card --&gt;
+&lt;div class="mdl-card mdl-shadow--2dp w-full max-w-sm"&gt;
+    &lt;div class="mdl-card__title"&gt;
+        &lt;h2 class="mdl-card__title-text"&gt;Card Title&lt;/h2&gt;
+    &lt;/div&gt;
+    &lt;div class="mdl-card__supporting-text"&gt;
+        This is the main content area of the card.
+        You can put text, images, or any other elements here.
+    &lt;/div&gt;
+    &lt;div class="mdl-card__actions mdl-card--border"&gt;
+        &lt;a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"&gt;
+            Action Button
+        &lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Image Card Example --&gt;
+&lt;div class="mdl-card mdl-shadow--2dp w-full max-w-sm"&gt;
+    &lt;div class="mdl-card__media"&gt;
+        &lt;img src="https://placehold.co/400x200/B0BEC5/FFFFFF?text=Image+Card" alt="Card Image" class="w-full h-auto rounded-t-lg"&gt;
+    &lt;/div&gt;
+    &lt;div class="mdl-card__title"&gt;
+        &lt;h2 class="mdl-card__title-text"&gt;Image Card Title&lt;/h2&gt;
+    &lt;/div&gt;
+    &lt;div class="mdl-card__supporting-text"&gt;
+        A card with a prominent image at the top.
+    &lt;/div&gt;
+    &lt;div class="mdl-card__actions mdl-card--border"&gt;
+        &lt;a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"&gt;
+            View Image
+        &lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selections Category -->
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col">
+                    <h3 class="text-xl font-medium mb-4">Selections</h3>
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Preview:</p>
+                        <div class="p-2 bg-white rounded-md shadow-inner">
+                            <div class="mb-3">
+                                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-1">
+                                    <input type="checkbox" id="checkbox-1" class="mdl-checkbox__input" checked>
+                                    <span class="mdl-checkbox__label">Checkbox 1</span>
+                                </label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
+                                    <input type="radio" id="option-1" class="mdl-radio__button" name="options" value="1" checked>
+                                    <span class="mdl-radio__label">Radio Option 1</span>
+                                </label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
+                                    <input type="radio" id="option-2" class="mdl-radio__button" name="options" value="2">
+                                    <span class="mdl-radio__label">Radio Option 2</span>
+                                </label>
+                            </div>
+                            <div>
+                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1">
+                                    <input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
+                                    <span class="mdl-switch__label">Toggle Switch</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Code:</p>
+                        <div class="code-block">
+<pre><code>&lt;!-- Checkbox --&gt;
+&lt;label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="my-checkbox"&gt;
+    &lt;input type="checkbox" id="my-checkbox" class="mdl-checkbox__input" checked&gt;
+    &lt;span class="mdl-checkbox__label"&gt;My Checkbox&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;!-- Radio Button Group --&gt;
+&lt;label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio-option-a"&gt;
+    &lt;input type="radio" id="radio-option-a" class="mdl-radio__button" name="my-radio-group" value="A" checked&gt;
+    &lt;span class="mdl-radio__label"&gt;Option A&lt;/span&gt;
+&lt;/label&gt;
+&lt;label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio-option-b"&gt;
+    &lt;input type="radio" id="radio-option-b" class="mdl-radio__button" name="my-radio-group" value="B"&gt;
+    &lt;span class="mdl-radio__label"&gt;Option B&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;!-- Toggle Switch --&gt;
+&lt;label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="my-switch"&gt;
+    &lt;input type="checkbox" id="my-switch" class="mdl-switch__input" checked&gt;
+    &lt;span class="mdl-switch__label"&gt;Enable Feature&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sliders Category -->
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col">
+                    <h3 class="text-xl font-medium mb-4">Sliders</h3>
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Preview:</p>
+                        <div class="p-2 bg-white rounded-md shadow-inner">
+                            <input class="mdl-slider mdl-js-slider" type="range" id="s1" min="0" max="100" value="25" tabindex="0">
+                            <input class="mdl-slider mdl-js-slider" type="range" id="s2" min="0" max="100" value="75" tabindex="0">
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Code:</p>
+                        <div class="code-block">
+<pre><code>&lt;!-- Basic Slider --&gt;
+&lt;input class="mdl-slider mdl-js-slider" type="range"
+       id="my-slider-1" min="0" max="100" value="50" tabindex="0"&gt;
+
+&lt;!-- Another Slider --&gt;
+&lt;input class="mdl-slider mdl-js-slider" type="range"
+       id="my-slider-2" min="0" max="100" value="75" tabindex="0"&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section: UI Templates -->
+        <section class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 text-indigo-600 border-b pb-3">
+                UI Templates
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Image Gallery Template -->
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col">
+                    <h3 class="text-xl font-medium mb-4">Image Gallery</h3>
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Preview:</p>
+                        <div class="grid grid-cols-2 gap-2 p-2 bg-white rounded-md shadow-inner">
+                            <div class="rounded-lg overflow-hidden shadow-md">
+                                <img src="https://placehold.co/300x200/E0F2F7/374151?text=Image+1" alt="Gallery Image 1" class="w-full h-24 object-cover">
+                            </div>
+                            <div class="rounded-lg overflow-hidden shadow-md">
+                                <img src="https://placehold.co/300x200/FFF3E0/374151?text=Image+2" alt="Gallery Image 2" class="w-full h-24 object-cover">
+                            </div>
+                            <div class="rounded-lg overflow-hidden shadow-md">
+                                <img src="https://placehold.co/300x200/FCE4EC/374151?text=Image+3" alt="Gallery Image 3" class="w-full h-24 object-cover">
+                            </div>
+                            <div class="rounded-lg overflow-hidden shadow-md">
+                                <img src="https://placehold.co/300x200/E8F5E9/374151?text=Image+4" alt="Gallery Image 4" class="w-full h-24 object-cover">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Code:</p>
+                        <div class="code-block">
+<pre><code>&lt;!-- Responsive Image Gallery --&gt;
+&lt;div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"&gt;
+    &lt;div class="rounded-lg overflow-hidden shadow-md"&gt;
+        &lt;img src="https://placehold.co/600x400/E0F2F7/374151?text=Image+1" alt="Gallery Image 1" class="w-full h-48 object-cover"&gt;
+    &lt;/div&gt;
+    &lt;div class="rounded-lg overflow-hidden shadow-md"&gt;
+        &lt;img src="https://placehold.co/600x400/FFF3E0/374151?text=Image+2" alt="Gallery Image 2" class="w-full h-48 object-cover"&gt;
+    &lt;/div&gt;
+    &lt;div class="rounded-lg overflow-hidden shadow-md"&gt;
+        &lt;img src="https://placehold.co/600x400/FCE4EC/374151?text=Image+3" alt="Gallery Image 3" class="w-full h-48 object-cover"&gt;
+    &lt;/div&gt;
+    &lt;!-- Add more image divs as needed --&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Slider Template -->
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col">
+                    <h3 class="text-xl font-medium mb-4">Image Slider</h3>
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Preview:</p>
+                        <div class="slider-container w-full h-48 bg-gray-200 p-2 rounded-md shadow-inner">
+                            <div class="slider-wrapper h-full">
+                                <img src="https://placehold.co/800x400/FFCCBC/374151?text=Slide+1" alt="Slide 1">
+                                <img src="https://placehold.co/800x400/D1C4E9/374151?text=Slide+2" alt="Slide 2">
+                                <img src="https://placehold.co/800x400/C8E6C9/374151?text=Slide+3" alt="Slide 3">
+                            </div>
+                            <button class="slider-button left" onclick="moveSlide(-1)">&#10094;</button>
+                            <button class="slider-button right" onclick="moveSlide(1)">&#10095;</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Code:</p>
+                        <div class="code-block">
+<pre><code>&lt;!-- Image Slider Structure --&gt;
+&lt;div class="slider-container w-full h-64 bg-gray-200"&gt;
+    &lt;div class="slider-wrapper h-full"&gt;
+        &lt;img src="https://placehold.co/800x400/FFCCBC/374151?text=Slide+1" alt="Slide 1"&gt;
+        &lt;img src="https://placehold.co/800x400/D1C4E9/374151?text=Slide+2" alt="Slide 2"&gt;
+        &lt;img src="https://placehold.co/800x400/C8E6C9/374151?text=Slide+3" alt="Slide 3"&gt;
+    &lt;/div&gt;
+    &lt;button class="slider-button left" onclick="moveSlide(-1)"&gt;&amp;#10094;&lt;/button&gt;
+    &lt;button class="slider-button right" onclick="moveSlide(1)"&gt;&amp;#10095;&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Corresponding JavaScript (place at end of body) --&gt;
+&lt;script&gt;
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slider-wrapper img');
+    const totalSlides = slides.length;
+
+    function showSlide(index) {
+        if (index &gt;= totalSlides) {
+            currentSlide = 0;
+        } else if (index &lt; 0) {
+            currentSlide = totalSlides - 1;
+        } else {
+            currentSlide = index;
+        }
+        const sliderWrapper = document.querySelector('.slider-wrapper');
+        sliderWrapper.style.transform = `translateX(${-currentSlide * 100}%)`;
+    }
+
+    function moveSlide(direction) {
+        showSlide(currentSlide + direction);
+    }
+
+    document.addEventListener('DOMContentLoaded', () =&gt; {
+        showSlide(0);
+    });
+&lt;/script&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accordion Menu Template -->
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col">
+                    <h3 class="text-xl font-medium mb-4">Accordion Menu</h3>
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Preview:</p>
+                        <div class="space-y-2 p-2 bg-white rounded-md shadow-inner">
+                            <div class="accordion-item">
+                                <div class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span>Section 1: What is Material Design?</span>
+                                    <span>&#9660;</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <p>
+                                        Material Design is a design language developed by Google in 2014.
+                                        It makes liberal use of grid-based layouts, responsive animations...
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <div class="accordion-header" onclick="toggleAccordion(this)">
+                                    <span>Section 2: How to use MDL?</span>
+                                    <span>&#9660;</span>
+                                </div>
+                                <div class="accordion-content">
+                                    <p>
+                                        Material Design Lite (MDL) lets you add a Material Design look and feel to
+                                        your websites. It doesn't rely on any JavaScript frameworks...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Code:</p>
+                        <div class="code-block">
+<pre><code>&lt;!-- Accordion Menu Structure --&gt;
+&lt;div class="space-y-4"&gt;
+    &lt;div class="accordion-item"&gt;
+        &lt;div class="accordion-header" onclick="toggleAccordion(this)"&gt;
+            &lt;span&gt;Section Title 1&lt;/span&gt;
+            &lt;span&gt;&amp;#9660;&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class="accordion-content"&gt;
+            &lt;p&gt;Content for section 1 goes here.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="accordion-item"&gt;
+        &lt;div class="accordion-header" onclick="toggleAccordion(this)"&gt;
+            &lt;span&gt;Section Title 2&lt;/span&gt;
+            &lt;span&gt;&amp;#9660;&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class="accordion-content"&gt;
+            &lt;p&gt;Content for section 2 goes here.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Corresponding JavaScript (place at end of body) --&gt;
+&lt;script&gt;
+    function toggleAccordion(header) {
+        const item = header.closest('.accordion-item');
+        if (item) {
+            document.querySelectorAll('.accordion-item.active').forEach(activeItem =&gt; {
+                if (activeItem !== item) {
+                    activeItem.classList.remove('active');
+                }
+            });
+            item.classList.toggle('active');
+        }
+    }
+&lt;/script&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sliding Cards Template -->
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col md:col-span-2">
+                    <h3 class="text-xl font-medium mb-4">Sliding Cards (Horizontal Scroll)</h3>
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Preview:</p>
+                        <div class="sliding-cards-container flex gap-4 overflow-x-auto pb-4 p-2 bg-white rounded-md shadow-inner">
+                            <!-- Card 1 -->
+                            <div class="mdl-card mdl-shadow--4dp">
+                                <div class="mdl-card__title mdl-card--expand">
+                                    <h2 class="mdl-card__title-text">Card One</h2>
+                                </div>
+                                <div class="mdl-card__supporting-text">
+                                    Lorem ipsum dolor sit amet, consectetur...
+                                </div>
+                                <div class="mdl-card__actions mdl-card--border">
+                                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Action</a>
+                                </div>
+                            </div>
+                            <!-- Card 2 -->
+                            <div class="mdl-card mdl-shadow--4dp">
+                                <div class="mdl-card__title mdl-card--expand">
+                                    <h2 class="mdl-card__title-text">Card Two</h2>
+                                </div>
+                                <div class="mdl-card__supporting-text">
+                                    This is the second card in the sliding set.
+                                </div>
+                                <div class="mdl-card__actions mdl-card--border">
+                                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Learn More</a>
+                                </div>
+                            </div>
+                            <!-- Card 3 -->
+                            <div class="mdl-card mdl-shadow--4dp">
+                                <div class="mdl-card__title mdl-card--expand">
+                                    <h2 class="mdl-card__title-text">Card Three</h2>
+                                </div>
+                                <div class="mdl-card__supporting-text">
+                                    You can scroll horizontally to see more cards.
+                                </div>
+                                <div class="mdl-card__actions mdl-card--border">
+                                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Code:</p>
+                        <div class="code-block">
+<pre><code>&lt;!-- Sliding Cards Container --&gt;
+&lt;div class="sliding-cards-container flex gap-4 overflow-x-auto pb-4"&gt;
+    &lt;!-- Card 1 --&gt;
+    &lt;div class="mdl-card mdl-shadow--4dp"&gt;
+        &lt;div class="mdl-card__title mdl-card--expand"&gt;
+            &lt;h2 class="mdl-card__title-text"&gt;Card Title One&lt;/h2&gt;
+        &lt;/div&gt;
+        &lt;div class="mdl-card__supporting-text"&gt;
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        &lt;/div&gt;
+        &lt;div class="mdl-card__actions mdl-card--border"&gt;
+            &lt;a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"&gt;
+                Action
+            &lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!-- Card 2 --&gt;
+    &lt;div class="mdl-card mdl-shadow--4dp"&gt;
+        &lt;div class="mdl-card__title mdl-card--expand"&gt;
+            &lt;h2 class="mdl-card__title-text"&gt;Card Title Two&lt;/h2&gt;
+        &lt;/div&gt;
+        &lt;div class="mdl-card__supporting-text"&gt;
+            This is the second card in the sliding set.
+        &lt;/div&gt;
+        &lt;div class="mdl-card__actions mdl-card--border"&gt;
+            &lt;a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"&gt;
+                Learn More
+            &lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!-- Add more cards as needed --&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs Template -->
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col md:col-span-2">
+                    <h3 class="text-xl font-medium mb-4">Tabs</h3>
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Preview:</p>
+                        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header h-64 overflow-hidden rounded-md shadow-inner border border-gray-200">
+                            <div class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+                                <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+                                    <a href="#tab1-panel-preview" class="mdl-layout__tab is-active">Overview</a>
+                                    <a href="#tab2-panel-preview" class="mdl-layout__tab">Features</a>
+                                </div>
+                            </div>
+                            <main class="mdl-layout__content">
+                                <section class="mdl-layout__tab-panel is-active" id="tab1-panel-preview">
+                                    <div class="page-content p-4">
+                                        <h4 class="text-lg font-semibold mb-2">Tab 1: Overview</h4>
+                                        <p>
+                                            This is the content for the first tab. Tabs are great for organizing content.
+                                        </p>
+                                    </div>
+                                </section>
+                                <section class="mdl-layout__tab-panel" id="tab2-panel-preview">
+                                    <div class="page-content p-4">
+                                        <h4 class="text-lg font-semibold mb-2">Tab 2: Features</h4>
+                                        <ul class="list-disc list-inside space-y-1">
+                                            <li>Responsive Design</li>
+                                            <li>Easy Customization</li>
+                                        </ul>
+                                    </div>
+                                </section>
+                            </main>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Code:</p>
+                        <div class="code-block">
+<pre><code>&lt;!-- Material Design Tabs Structure --&gt;
+&lt;div class="mdl-layout mdl-js-layout mdl-layout--fixed-header"&gt;
+    &lt;div class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary"&gt;
+        &lt;div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark"&gt;
+            &lt;a href="#tab1-panel" class="mdl-layout__tab is-active"&gt;Tab 1&lt;/a&gt;
+            &lt;a href="#tab2-panel" class="mdl-layout__tab"&gt;Tab 2&lt;/a&gt;
+            &lt;a href="#tab3-panel" class="mdl-layout__tab"&gt;Tab 3&lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;main class="mdl-layout__content"&gt;
+        &lt;section class="mdl-layout__tab-panel is-active" id="tab1-panel"&gt;
+            &lt;div class="page-content p-4"&gt;
+                &lt;h4&gt;Content for Tab 1&lt;/h4&gt;
+                &lt;p&gt;This is the content for the first tab.&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+        &lt;section class="mdl-layout__tab-panel" id="tab2-panel"&gt;
+            &lt;div class="page-content p-4"&gt;
+                &lt;h4&gt;Content for Tab 2&lt;/h4&gt;
+                &lt;p&gt;This is the content for the second tab.&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+        &lt;section class="mdl-layout__tab-panel" id="tab3-panel"&gt;
+            &lt;div class="page-content p-4"&gt;
+                &lt;h4&gt;Content for Tab 3&lt;/h4&gt;
+                &lt;p&gt;This is the content for the third tab.&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+    &lt;/main&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section: Mini-Templates -->
+        <section class="mb-12">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 text-indigo-600 border-b pb-3">
+                Mini-Templates
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Paragraph and Inset Microformat -->
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col">
+                    <h3 class="text-xl font-medium mb-4">Paragraph & Inset Microformat</h3>
+                    <div class="mb-4">
+                        <p class="font-semibold mb-2">Preview:</p>
+                        <div class="p-4 bg-white rounded-md shadow-inner">
+                            <p class="mb-4 text-gray-700">
+                                This is a standard paragraph of text. It's designed to be easily readable
+                                and provides a basic block for your content. You can adjust its styling
+                                using Tailwind CSS classes for font size, line height, and color.
+                            </p>
+                            <div class="border-l-4 border-indigo-500 bg-indigo-50 p-4 rounded-md shadow-sm">
+                                <h4 class="text-lg font-semibold text-indigo-800 mb-2">Important Note</h4>
+                                <p class="text-indigo-700 text-sm">
+                                    This is an inset microformat. It's useful for drawing attention to
+                                    short, important pieces of information or quick facts.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-2">Code:</p>
+                        <div class="code-block">
+<pre><code>&lt;!-- Standard Paragraph --&gt;
+&lt;p class="mb-4 text-gray-700"&gt;
+    This is a standard paragraph of text. It's designed to be easily readable
+    and provides a basic block for your content.
+&lt;/p&gt;
+
+&lt;!-- Inset Microformat with Headline --&gt;
+&lt;div class="border-l-4 border-indigo-500 bg-indigo-50 p-4 rounded-md shadow-sm"&gt;
+    &lt;h4 class="text-lg font-semibold text-indigo-800 mb-2"&gt;Important Note&lt;/h4&gt;
+    &lt;p class="text-indigo-700 text-sm"&gt;
+        This is an inset microformat. It's useful for drawing attention to
+        short, important pieces of information or quick facts.
+    &lt;/p&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Material Design Lite JavaScript -->
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <script>
+        // JavaScript for Image Slider
+        let currentSlide = 0;
+        // Use a more specific selector to avoid conflicts with preview tabs
+        const sliderWrapper = document.querySelector('.slider-container .slider-wrapper');
+        const slides = sliderWrapper ? sliderWrapper.querySelectorAll('img') : [];
+        const totalSlides = slides.length;
+
+        /**
+         * Shows a specific slide in the slider.
+         * @param {number} index - The index of the slide to show.
+         */
+        function showSlide(index) {
+            if (!sliderWrapper || totalSlides === 0) return; // Exit if slider not found or no slides
+
+            if (index >= totalSlides) {
+                currentSlide = 0; // Loop back to the first slide
+            } else if (index < 0) {
+                currentSlide = totalSlides - 1; // Loop to the last slide
+            } else {
+                currentSlide = index;
+            }
+            sliderWrapper.style.transform = `translateX(${-currentSlide * 100}%)`;
+        }
+
+        /**
+         * Moves the slider to the next or previous slide.
+         * @param {number} direction - -1 for previous, 1 for next.
+         */
+        function moveSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Initialize slider on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sliderWrapper) { // Only initialize if slider exists
+                showSlide(0);
+            }
+        });
+
+
+        // JavaScript for Accordion Menu
+        /**
+         * Toggles the active state of an accordion item.
+         * @param {HTMLElement} header - The header element of the accordion item.
+         */
+        function toggleAccordion(header) {
+            const item = header.closest('.accordion-item');
+            if (item) {
+                // Close all other active accordions in the same parent container
+                item.parentElement.querySelectorAll('.accordion-item.active').forEach(activeItem => {
+                    if (activeItem !== item) {
+                        activeItem.classList.remove('active');
+                    }
+                });
+                // Toggle the clicked accordion
+                item.classList.toggle('active');
+            }
+        }
+    </script>
+</body>
+</html>
